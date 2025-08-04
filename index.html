@@ -3,72 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Age Tracker</title>
+    <title>Lifetime Statistics</title>
     <style>
         :root {
-            --primary: #00dbde;
-            --secondary: #fc00ff;
-            --dark: #0f0f1a;
-            --light: rgba(255, 255, 255, 0.9);
+            --primary: #7F00FF;
+            --secondary: #E100FF;
+            --dark: #121212;
+            --light: rgba(255, 255, 255, 0.95);
             --glass: rgba(255, 255, 255, 0.05);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--dark), #1a1a2e);
+            background: linear-gradient(135deg, var(--dark), #1A1A2E);
             color: var(--light);
             min-height: 100vh;
+            margin: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
+            justify-content: center;
+            padding: 1rem;
         }
 
         .container {
-            width: 95%;
-            max-width: 800px;
+            width: 100%;
+            max-width: 600px;
             background: var(--glass);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             padding: 2rem;
-            position: relative;
             overflow: hidden;
-            z-index: 1;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(0, 219, 222, 0.1),
-                rgba(252, 0, 255, 0.1)
-            );
-            z-index: -1;
-            animation: rotate 15s linear infinite;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         h1 {
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            margin-bottom: 0.5rem;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            margin-bottom: 1.5rem;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
@@ -76,137 +48,102 @@
             text-align: center;
         }
 
-        .subtitle {
-            font-size: clamp(0.9rem, 3vw, 1.1rem);
-            opacity: 0.8;
-            margin-bottom: 2rem;
-            text-align: center;
+        .time-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
         }
 
-        .time-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .time-unit {
-            background: var(--glass);
+        .time-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(127, 0, 255, 0.1);
             border-radius: 12px;
-            padding: 1.5rem 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid rgba(127, 0, 255, 0.2);
+            transition: transform 0.3s, background 0.3s;
         }
 
-        .time-unit:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 219, 222, 0.2);
+        .time-row:hover {
+            transform: translateX(5px);
+            background: rgba(127, 0, 255, 0.2);
         }
 
-        .time-unit::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+        .time-label {
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
         }
 
-        .time-unit:hover::after {
-            transform: scaleX(1);
-        }
-
-        .number {
-            font-size: clamp(2rem, 8vw, 2.8rem);
+        .time-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
             font-weight: 700;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 0.3rem;
-        }
-
-        .label {
-            font-size: clamp(0.7rem, 3vw, 0.9rem);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.8;
         }
 
         .birthdate {
-            margin-top: 1.5rem;
-            font-size: clamp(0.8rem, 3vw, 1rem);
+            margin-top: 2rem;
             text-align: center;
-            background: rgba(0, 219, 222, 0.1);
+            font-size: 0.9rem;
+            background: rgba(127, 0, 255, 0.15);
             padding: 0.8rem;
             border-radius: 50px;
-            display: inline-block;
-            width: 100%;
-            border: 1px solid rgba(0, 219, 222, 0.2);
+            border: 1px solid rgba(127, 0, 255, 0.25);
         }
 
-        .floating-dots {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        .dot {
-            position: absolute;
-            background: rgba(0, 219, 222, 0.3);
-            border-radius: 50%;
-            filter: blur(1px);
-            animation: float linear infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(calc(var(--random-x) * 100px)); opacity: 0; }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .time-row {
+                padding: 1rem;
+            }
+            .time-value {
+                font-size: 1.2rem;
+            }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="floating-dots" id="floatingDots"></div>
     <div class="container">
         <h1>Life</h1>
-        <p class="subtitle">Every moment counts</p>
         
-        <div class="time-grid">
-            <div class="time-unit">
-                <div class="number" id="years">0</div>
-                <div class="label">Years</div>
+        <div class="time-list">
+            <div class="time-row">
+                <span class="time-label">Years Lived</span>
+                <span class="time-value" id="total-years">0</span>
             </div>
-            <div class="time-unit">
-                <div class="number" id="months">0</div>
-                <div class="label">Months</div>
+            <div class="time-row">
+                <span class="time-label">Months Lived</span>
+                <span class="time-value" id="total-months">0</span>
             </div>
-            <div class="time-unit">
-                <div class="number" id="days">0</div>
-                <div class="label">Days</div>
+            <div class="time-row">
+                <span class="time-label">Weeks Lived</span>
+                <span class="time-value" id="total-weeks">0</span>
             </div>
-            <div class="time-unit">
-                <div class="number" id="hours">0</div>
-                <div class="label">Hours</div>
+            <div class="time-row">
+                <span class="time-label">Days Lived</span>
+                <span class="time-value" id="total-days">0</span>
             </div>
-            <div class="time-unit">
-                <div class="number" id="minutes">0</div>
-                <div class="label">Minutes</div>
+            <div class="time-row">
+                <span class="time-label">Hours Lived</span>
+                <span class="time-value" id="total-hours">0</span>
             </div>
-            <div class="time-unit">
-                <div class="number" id="seconds">0</div>
-                <div class="label">Seconds</div>
+            <div class="time-row">
+                <span class="time-label">Minutes Lived</span>
+                <span class="time-value" id="total-minutes">0</span>
+            </div>
+            <div class="time-row">
+                <span class="time-label">Seconds Lived</span>
+                <span class="time-value" id="total-seconds">0</span>
             </div>
         </div>
         
@@ -217,68 +154,46 @@
         // SET YOUR BIRTH DATE HERE (YYYY, MM-1, DD)
         const birthDate = new Date(2002, 10, 3); // ← Change to your birth date
         
-        function updateAge() {
+        function calculateTotalTime() {
             const now = new Date();
-            let diff = now - birthDate;
+            const diffMs = now - birthDate;
             
-            // Calculate years
-            const ageDate = new Date(diff);
-            const years = ageDate.getUTCFullYear() - 1970;
+            // Calculate all totals
+            const totalSeconds = Math.floor(diffMs / 1000);
+            const totalMinutes = Math.floor(totalSeconds / 60);
+            const totalHours = Math.floor(totalMinutes / 60);
+            const totalDays = Math.floor(totalHours / 24);
+            const totalWeeks = Math.floor(totalDays / 7);
             
-            // Calculate months
-            let months = now.getMonth() - birthDate.getMonth();
-            if (months < 0 || (months === 0 && now.getDate() < birthDate.getDate())) {
-                months += 12;
+            // Calculate months and years precisely
+            let totalYears = now.getFullYear() - birthDate.getFullYear();
+            let totalMonths = totalYears * 12 + now.getMonth() - birthDate.getMonth();
+            
+            // Adjust if birthday hasn't occurred yet this year
+            if (now.getMonth() < birthDate.getMonth() || 
+                (now.getMonth() === birthDate.getMonth() && now.getDate() < birthDate.getDate())) {
+                totalYears--;
+                totalMonths--;
             }
-            
-            // Calculate days
-            const lastBirthday = new Date(
-                now.getFullYear(),
-                birthDate.getMonth(),
-                birthDate.getDate()
-            );
-            let days = Math.floor((now - lastBirthday) / (1000 * 60 * 60 * 24));
-            if (days < 0) {
-                lastBirthday.setFullYear(lastBirthday.getFullYear() - 1);
-                days = Math.floor((now - lastBirthday) / (1000 * 60 * 60 * 24));
-            }
-            
-            // Calculate time since midnight
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
             
             // Update display
-            document.getElementById('years').textContent = years;
-            document.getElementById('months').textContent = months;
-            document.getElementById('days').textContent = days;
-            document.getElementById('hours').textContent = hours;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds;
+            document.getElementById('total-years').textContent = totalYears.toLocaleString();
+            document.getElementById('total-months').textContent = totalMonths.toLocaleString();
+            document.getElementById('total-weeks').textContent = totalWeeks.toLocaleString();
+            document.getElementById('total-days').textContent = totalDays.toLocaleString();
+            document.getElementById('total-hours').textContent = totalHours.toLocaleString();
+            document.getElementById('total-minutes').textContent = totalMinutes.toLocaleString();
+            document.getElementById('total-seconds').textContent = totalSeconds.toLocaleString();
             
             // Format birthdate display
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('birthdate-display').textContent = 
-                `Born on ${birthDate.toLocaleDateString('en-US', options)}`;
+                `Born on ${birthDate.toLocaleDateString('en-US', options)} • Counting every moment`;
         }
         
-        // Create floating dots
-        const floatingDots = document.getElementById('floatingDots');
-        for (let i = 0; i < 30; i++) {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            dot.style.width = `${Math.random() * 10 + 5}px`;
-            dot.style.height = dot.style.width;
-            dot.style.left = `${Math.random() * 100}vw`;
-            dot.style.animationDuration = `${Math.random() * 20 + 10}s`;
-            dot.style.animationDelay = `${Math.random() * 5}s`;
-            dot.style.setProperty('--random-x', Math.random() > 0.5 ? 1 : -1);
-            floatingDots.appendChild(dot);
-        }
-        
-        // Update age every second
-        setInterval(updateAge, 1000);
-        updateAge(); // Initial call
+        // Update every second
+        setInterval(calculateTotalTime, 1000);
+        calculateTotalTime(); // Initial call
     </script>
 </body>
 </html>
